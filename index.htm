@@ -22,5 +22,39 @@
                                
     </main>
 
+    <script src="datos.js"></script>
+    <script>
+        // getElementsByTagName dvuelve siempre una colección aunque haya 
+        // solo una etiqueta del tipo indicado, con lo que usamos [0]
+        // para cogerla
+        const main = document.getElementsByTagName("main")[0];
+        datos.forEach(b => {
+            const div = document.createElement("div");
+            div.classList.add("barco");
+            const imgBarco = document.createElement("img");
+            imgBarco.classList.add("imagenBarco");
+            // .imagen y .nombre son los atributos en el array de barcos
+            imgBarco.src = "imagenes/barcos/" + b.imagen;
+            imgBarco.alt = b.nombre;
+            const imgBandera = document.createElement("img");
+            imgBandera.classList.add("imgBandera");
+            imgBandera.alt = b.nacion;
+            // Como en datos no tengo atributo para la imagen de la bandera
+            // debemos coger la nación, psarla a minúsculas (pues la imagen
+            // está en minúsculas) y añadir el .png
+            imgBandera.src = "imagenes/banderas/" 
+                + b.nacion.toLowerCase() + ".png";
+            imgBandera.src = `imagenes/banderas/${b.nacion.toLowerCase()}.png`;
+            
+            const imgSeleccionado = document.createElement("img");
+            imgSeleccionado.classList.add("imgSeleccionado");
+            imgSeleccionado.alt = "deseleccionado";
+
+            div.appendChild(imgSeleccionado);
+            div.appendChild(imgBandera);
+            div.appendChild(imgBarco);
+            main.appendChild(div);
+        });
+    </script>
 </body>
 </html>
