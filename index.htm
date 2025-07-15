@@ -37,17 +37,17 @@
             imgBarco.src = "imagenes/barcos/" + b.imagen;
             imgBarco.alt = b.nombre;
             const imgBandera = document.createElement("img");
-            imgBandera.classList.add("imgBandera");
+            imgBandera.classList.add("imagenBandera");
             imgBandera.alt = b.nacion;
             // Como en datos no tengo atributo para la imagen de la bandera
             // debemos coger la nación, psarla a minúsculas (pues la imagen
             // está en minúsculas) y añadir el .png
             imgBandera.src = "imagenes/banderas/" 
                 + b.nacion.toLowerCase() + ".png";
-            imgBandera.src = `imagenes/banderas/${b.nacion.toLowerCase()}.png`;
+            //imgBandera.src = `imagenes/banderas/${b.nacion.toLowerCase()}.png`;
             
             const imgSeleccionado = document.createElement("img");
-            imgSeleccionado.classList.add("imgSeleccionado");
+            imgSeleccionado.classList.add("imagenSeleccionado");
             imgSeleccionado.alt = "deseleccionado";
 
             div.appendChild(imgSeleccionado);
