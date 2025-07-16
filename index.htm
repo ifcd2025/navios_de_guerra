@@ -97,7 +97,7 @@
             mostrarBarcos(filtrados);
         }
 
-        function mostraTodos() {
+        function mostrarTodos() {
             // datos es el array con todos los barcos
             mostrarBarcos(datos);
         }
@@ -163,6 +163,8 @@
         // solo una etiqueta del tipo indicado, con lo que usamos [0]
         // para cogerla
         const main = document.getElementsByTagName("main")[0];
+        // Al comienzo debemos mostrar todos los barcos, los cuales están
+        // en el array datos
         mostrarBarcos(datos);
       
         document.getElementById("filtroNacion")
@@ -170,7 +172,7 @@
         document.getElementById("filtroTipo")
             .addEventListener("change", filtrarPorTipo);
         document.getElementById("filtroTodos")
-            .addEventListener("click", mostraTodos);
+            .addEventListener("click", mostrarTodos);
     </script>
 </body>
 </html>
