@@ -45,12 +45,13 @@
      main -->
     <div id="infoBarco">
         <h2>Nombre</h2>
-        <p><span>Tripulación:</span><span></span></p>
-        <p><span>Peso:</span><span></span></p>
-        <p><span>Nación:</span><span></span></p>
-        <p><span>Cañones:</span><span></span></p>
-        <p><span>Año:</span><span></span></p>
-        <p><span>Tipo:</span><span></span></p>
+        <p><span>Tripulación:</span><span id="tripulacion">300</span></p>
+        <p><span>Peso:</span><span id="peso">200</span></p>
+        <p><span>Nación:</span><span id="nacion">españa</span></p>
+        <p><span>Cañones:</span><span id="canhones">20</span></p>
+        <p><span>Año:</span><span id="anho">1576</span></p>
+        <p><span>Tipo:</span><span id="tipo">Galeón</span></p>
+        <input type="button" id="cerrarInfo" name="cerrarInfo" value="cerrar">
     </div>
 
     <script src="datos.js"></script>
@@ -117,6 +118,11 @@
             // Usamos currentTarget pues el div tiene hijos y currentTarget
             // siempre devuelve el elemento que hizo el addEventListener
             const nombre = evt.currentTarget.dataset.nombre;
+            // Si pulsa en la imagen de seleccionar no queremos mostrar la info
+            if(evt.target.classList.contains("imagenSeleccionado")) {
+                return;
+            }
+
             // Buscamos el nombre en el array de datos que tiene todos los
             //barcos para así obtener el resto de información
             // filter devuelve siempre un array aunque haya un solo
@@ -124,6 +130,16 @@
             // coger el primero (que es el único en nuestro caso pues no hay
             // dos barcos con el mismo nombre)
             const barco = datos.filter(b => b.nombre == nombre)[0];
+            const info = document.getElementById("infoBarco");
+            document.getElementById("tripulacion").textContent = barco.tripulacion;
+            document.getElementById("peso").textContent = barco.peso;
+            document.getElementById("nacion").textContent = barco.nacion;
+            document.getElementById("canhones").textContent = barco.canones;
+            document.getElementById("anho").textContent = barco.anio_construccion;
+            document.getElementById("tipo").textContent = barco.tipo;
+            // Lo más fácil sería darle un id al h2 pero vamos a ver otro modo
+            info.querySelector("h2").textContent = barco.nombre;
+            info.style.display = "block"; // para mostrarlo
         }
 
         function mostrarBarcos(barcos) {
@@ -207,6 +223,9 @@
             .addEventListener("change", filtrarPorTipo);
         document.getElementById("filtroTodos")
             .addEventListener("click", mostrarTodos);
+        document.getElementById("cerrarInfo")
+            .addEventListener("click", 
+                () => document.getElementById("infoBarco").style.display = "none" );
     </script>
 </body>
 </html>

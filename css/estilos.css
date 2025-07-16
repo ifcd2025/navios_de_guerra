@@ -14,6 +14,16 @@ body {
     padding: 1rem;
 }
 
+header {
+    /*Para que el encabezado quede siempre visible en la parte superior */
+    position: sticky;
+    top:0; /* que quede pegado en la parte superior */
+    /* para que el contenido vaya por debajo del header al desplazarnos. Es
+    darle cualquier valor mayor que 0 */
+    z-index:10; 
+    background-color: black;
+    padding-bottom: .4rem;
+}
 header h1 {
     font-weight: normal;
     font-family: oldlondon, fantasy;
@@ -50,6 +60,9 @@ main {
     /* Para poder poner las imágenes de la bandera y seleccionado arriba */
     position: relative;
 }
+.barco:hover {
+    filter: brightness(1.1);
+}
 .barco p:nth-of-type(2) {
     background-color: bisque;
 }
@@ -73,6 +86,38 @@ main {
     width: 45px;
 }
 
+#infoBarco {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.764);
+    /* Para centrarlo en la ventana */
+    /* Usamos fixed en lugar de absolute para que, si hacemos scroll vertical,
+    el cuadro de info siempre quede en el centro de la ventana */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 2rem;
+    min-width: 250px;
+    display: none;
+    h2 {
+        font-size: 1.5rem;
+        border-bottom: 1px solid white;
+        font-weight: normal;
+    }
+    p {
+        margin-top: .6rem;
+        margin-bottom: .6rem;
+        display: flex;
+        justify-content: space-between;
+    }
+    #cerrarInfo {
+        display: block;
+        margin: auto;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
 
 @media screen and (max-width: 400px) {
     header h1 {
