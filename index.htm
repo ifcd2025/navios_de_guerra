@@ -9,9 +9,29 @@
 <body>
     <header>
         <h1>Navíos de guerra</h1>
+        <div class="filtros">
+            <label for="filtroNacion">Nación</label>
+            <select name="filtroNacion" id="filtroNacion">
+                <option value="-1">Seleccionar</option>
+                <!-- si no pongo value, se coge el texto del option -->
+                <option>Dinamarca</option>
+                <option>España</option>
+                <option>Francia</option>
+                <option>Inglaterra</option>
+            </select>
+            <label for="filtroTipo">Tipo</label>
+            <select name="filtroTipo" id="filtroTipo">
+                <option value="-1">Seleccionar</option>
+                <!-- Usamos los números por probar en Javascript las dos maneras -->
+                <option value="0">Carabela</option>
+                <option value="1">Galeón</option>
+                <option value="2">Nao</option>
+            </select>
+            <input type="button" id="filtroTodos" name="filtroTodos" value="Todos">
+        </div>
     </header>
     <main>
-        <div class="barco">
+       <!-- <div class="barco">
             <img src="imagenes/barcos/barco1.jpg" alt="" class="imagenBarco">
             <p>Nombre: hajdkasd</p>
             <p>Tripulación: 123</p>
@@ -19,42 +39,138 @@
             <img src="imagenes/banderas/dinamarca.png" alt="" class="imagenBandera">
             <img src="imagenes/deseleccionado.png" alt="" class="imagenSeleccionado">
         </div>
-                               
+        -->                    
     </main>
 
     <script src="datos.js"></script>
     <script>
+        // Necesitamos evt pues tenemos la misma función para todas las
+        // imágenes de selección y así poder saber en cual se hizo click
+        function seleccionarBarco(evt){
+            // Como la imagen no tiene hijos da igual usar target que currentTarget
+            // src contiene la URL completa aunque nosotros solo hayamos puesto
+            // imagenes/deseleccionado.png. Por ello no podemos preguntar por
+            // ==. Una opción es usar endsWith que comprueba si un texto termina
+            // con el valor indicado
+            if(evt.currentTarget.src.endsWith("imagenes/seleccionado.png")) {
+                evt.currentTarget.src = "imagenes/deseleccionado.png";
+            } else {
+                evt.currentTarget.src = "imagenes/seleccionado.png";
+            }
+        }
+
+        // Puedo usar evt.currentTarget para coger el select o, como este evento,
+        // es solo para el select, puedo cogerlo con document.getElementById
+        function filtrarPorNacion(evt) {
+            const seleccionado = evt.currentTarget.value;
+            if(seleccionado == -1) {
+                return;
+            }
+            // convierto las dos partes a mínusculas (o mayúsculas) para no tener que
+            // preocuparme como están escritas en ambos lados
+            const filtrados = datos
+                .filter(b => b.nacion.toLowerCase() == seleccionado.toLowerCase());
+            mostrarBarcos(filtrados);
+        }
+
+         function filtrarPorTipo(evt) {
+            const seleccionado = evt.currentTarget.value;
+            if(seleccionado == -1) {
+                return;
+            }
+            // Como nos hemos complicado la vida usando números en los value de
+            // este select, pero en datos hay textos, debemos usar ifs
+            let tipo;
+            if(seleccionado == 0) {
+                tipo = "carabela";
+            } else if(seleccionado == 1) {
+                tipo = "galeón";
+            } else {
+                tipo = "nao";
+            }
+           // const tipo = seleccionado == 0 ? "carabela" 
+            //    : seleccionado == 1 ? "galeón" : "nao";
+            // convierto las dos partes a mínusculas (o mayúsculas) para no tener que
+            // preocuparme como están escritas en ambos lados
+            const filtrados = datos
+                .filter(b => b.tipo.toLowerCase() == tipo.toLowerCase());
+            mostrarBarcos(filtrados);
+        }
+
+        function mostraTodos() {
+            // datos es el array con todos los barcos
+            mostrarBarcos(datos);
+        }
+
+        function mostrarBarcos(barcos) {
+            // Eliminamos los barcos existentes
+            document.getElementsByTagName("main")[0].textContent = "";
+            barcos.forEach(b => {
+                const div = document.createElement("div");
+                div.classList.add("barco");
+                const imgBarco = document.createElement("img");
+                imgBarco.classList.add("imagenBarco");
+                // .imagen y .nombre son los atributos en el array de barcos
+                imgBarco.src = "imagenes/barcos/" + b.imagen;
+                imgBarco.alt = b.nombre;
+                const imgBandera = document.createElement("img");
+                imgBandera.classList.add("imagenBandera");
+                imgBandera.alt = b.nacion;
+                // Como en datos no tengo atributo para la imagen de la bandera
+                // debemos coger la nación, pasarla a minúsculas (pues la imagen
+                // está en minúsculas) y añadir el .png
+                imgBandera.src = "imagenes/banderas/" 
+                    + b.nacion.toLowerCase() + ".png";
+                //imgBandera.src = `imagenes/banderas/${b.nacion.toLowerCase()}.png`;
+                
+                const imgSeleccionado = document.createElement("img");
+                imgSeleccionado.classList.add("imagenSeleccionado");
+                imgSeleccionado.alt = "deseleccionado";
+                imgSeleccionado.src = "imagenes/deseleccionado.png";
+                imgSeleccionado.addEventListener("click", seleccionarBarco);
+    
+                const p1 = document.createElement("p");
+                /*const b1 = document.createElement("b");
+                b1.textContent = "Nombre: ";
+                p1.appendChild(b1);
+                // Creo un nodo de texto
+                const t1 = document.createTextNode(b.nombre);
+                p1.appendChild(t1);*/
+    
+                // Con innerHTML ya se crean los nodos automáticamente
+                p1.innerHTML = `<b>Nombre:</b> ${b.nombre}`;
+    
+                //p1.textContent = "Nombre: " + b.nombre;
+                //p1.textContent = `Nombre: ${b.nombre}`;
+                const p2 = document.createElement("p");
+                //p2.textContent = "Tripulación: " + b.tripulacion;
+                p2.innerHTML = `<b>Tripulación:</b> ${b.tripulacion}`;
+                const p3 = document.createElement("p");
+                //p3.textContent = "Tipo: " + b.tipo;
+                p3.innerHTML = `<b>Tipo:</b> ${b.tipo}`;
+    
+                div.appendChild(imgSeleccionado);
+                div.appendChild(imgBandera);
+                div.appendChild(imgBarco);
+                div.appendChild(p1);
+                div.appendChild(p2);
+                div.appendChild(p3);
+                main.appendChild(div);
+            });
+        }
+
         // getElementsByTagName dvuelve siempre una colección aunque haya 
         // solo una etiqueta del tipo indicado, con lo que usamos [0]
         // para cogerla
         const main = document.getElementsByTagName("main")[0];
-        datos.forEach(b => {
-            const div = document.createElement("div");
-            div.classList.add("barco");
-            const imgBarco = document.createElement("img");
-            imgBarco.classList.add("imagenBarco");
-            // .imagen y .nombre son los atributos en el array de barcos
-            imgBarco.src = "imagenes/barcos/" + b.imagen;
-            imgBarco.alt = b.nombre;
-            const imgBandera = document.createElement("img");
-            imgBandera.classList.add("imagenBandera");
-            imgBandera.alt = b.nacion;
-            // Como en datos no tengo atributo para la imagen de la bandera
-            // debemos coger la nación, psarla a minúsculas (pues la imagen
-            // está en minúsculas) y añadir el .png
-            imgBandera.src = "imagenes/banderas/" 
-                + b.nacion.toLowerCase() + ".png";
-            //imgBandera.src = `imagenes/banderas/${b.nacion.toLowerCase()}.png`;
-            
-            const imgSeleccionado = document.createElement("img");
-            imgSeleccionado.classList.add("imagenSeleccionado");
-            imgSeleccionado.alt = "deseleccionado";
-
-            div.appendChild(imgSeleccionado);
-            div.appendChild(imgBandera);
-            div.appendChild(imgBarco);
-            main.appendChild(div);
-        });
+        mostrarBarcos(datos);
+      
+        document.getElementById("filtroNacion")
+            .addEventListener("change", filtrarPorNacion);
+        document.getElementById("filtroTipo")
+            .addEventListener("change", filtrarPorTipo);
+        document.getElementById("filtroTodos")
+            .addEventListener("click", mostraTodos);
     </script>
 </body>
 </html>
