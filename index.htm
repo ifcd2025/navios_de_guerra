@@ -39,8 +39,19 @@
             <img src="imagenes/banderas/dinamarca.png" alt="" class="imagenBandera">
             <img src="imagenes/deseleccionado.png" alt="" class="imagenSeleccionado">
         </div>
-        -->                    
+        -->
     </main>
+    <!-- Lo ponemos fuera del main ya que cuando filtramos borramos todo lo del
+     main -->
+    <div id="infoBarco">
+        <h2>Nombre</h2>
+        <p><span>Tripulación:</span><span></span></p>
+        <p><span>Peso:</span><span></span></p>
+        <p><span>Nación:</span><span></span></p>
+        <p><span>Cañones:</span><span></span></p>
+        <p><span>Año:</span><span></span></p>
+        <p><span>Tipo:</span><span></span></p>
+    </div>
 
     <script src="datos.js"></script>
     <script>
@@ -102,12 +113,35 @@
             mostrarBarcos(datos);
         }
 
+        function mostrarInfoBarco(evt) {
+            // Usamos currentTarget pues el div tiene hijos y currentTarget
+            // siempre devuelve el elemento que hizo el addEventListener
+            const nombre = evt.currentTarget.dataset.nombre;
+            // Buscamos el nombre en el array de datos que tiene todos los
+            //barcos para así obtener el resto de información
+            // filter devuelve siempre un array aunque haya un solo
+            // elemento que cumpla la condición. Por eso usamos [0] para
+            // coger el primero (que es el único en nuestro caso pues no hay
+            // dos barcos con el mismo nombre)
+            const barco = datos.filter(b => b.nombre == nombre)[0];
+        }
+
         function mostrarBarcos(barcos) {
             // Eliminamos los barcos existentes
             document.getElementsByTagName("main")[0].textContent = "";
             barcos.forEach(b => {
                 const div = document.createElement("div");
                 div.classList.add("barco");
+                // Necesitamos guardar en el div algún valor que nos permita luego
+                // buscar ese barco en el array de datos para obtener los demás datos
+                // Una opción es añadir el nombre suponiendo que no se repiten
+                // El método antiguo es añadir el atributo directamente
+                //div.nombre = b.nombre;
+                // Pero hoy día se recomienda usar attributos data
+                div.dataset.nombre = b.nombre;
+                // También podríamos añadir del mismo modo todos los demás atributos del barco
+
+                div.addEventListener("click", mostrarInfoBarco);
                 const imgBarco = document.createElement("img");
                 imgBarco.classList.add("imagenBarco");
                 // .imagen y .nombre son los atributos en el array de barcos
